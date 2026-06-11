@@ -1,0 +1,111 @@
+name: flutter_riverpod_template
+description: >
+  A production-ready Flutter template with Riverpod, GoRouter, Firebase,
+  and a feature-first clean architecture. Battle-tested across multiple apps.
+version: 1.0.0+1
+publish_to: none
+
+environment:
+  sdk: ">=3.3.0 <4.0.0"
+  flutter: ">=3.22.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # ─── State Management ───────────────────────────────────────────
+  flutter_riverpod: ^2.5.1
+  riverpod_annotation: ^2.3.5
+
+  # ─── Navigation ─────────────────────────────────────────────────
+  go_router: ^14.0.1
+
+  # ─── Firebase ───────────────────────────────────────────────────
+  firebase_core: ^3.1.1
+  firebase_auth: ^5.1.1
+  cloud_firestore: ^5.0.2
+  firebase_storage: ^12.0.1
+  firebase_analytics: ^11.1.0
+  firebase_crashlytics: ^4.0.4
+  firebase_remote_config: ^5.0.4
+  firebase_messaging: ^15.0.4
+
+  # ─── Data & Serialization ───────────────────────────────────────
+  freezed_annotation: ^2.4.4
+  json_annotation: ^4.9.0
+
+  # ─── Networking ─────────────────────────────────────────────────
+  dio: ^5.4.3+1
+  retrofit: ^4.1.0
+  connectivity_plus: ^6.0.3
+
+  # ─── Local Storage ──────────────────────────────────────────────
+  shared_preferences: ^2.3.0
+  flutter_secure_storage: ^9.2.2
+  hive_flutter: ^1.1.0
+
+  # ─── UI & UX ────────────────────────────────────────────────────
+  flutter_svg: ^2.0.10+1
+  cached_network_image: ^3.3.1
+  shimmer: ^3.0.0
+  lottie: ^3.1.0
+  gap: ^3.0.1
+  toastification: ^2.1.0
+  flutter_animate: ^4.5.0
+
+  # ─── Utilities ──────────────────────────────────────────────────
+  intl: ^0.19.0
+  logger: ^2.3.0
+  equatable: ^2.0.5
+  dartz: ^0.10.1
+  uuid: ^4.4.0
+  path_provider: ^2.1.3
+  url_launcher: ^6.3.0
+  package_info_plus: ^8.0.0
+  device_info_plus: ^10.1.0
+  permission_handler: ^11.3.1
+  image_picker: ^1.1.2
+  collection: ^1.18.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  # ─── Code Generation ────────────────────────────────────────────
+  build_runner: ^2.4.11
+  freezed: ^2.5.2
+  json_serializable: ^6.8.0
+  riverpod_generator: ^2.4.0
+  retrofit_generator: ^8.1.0
+  hive_generator: ^2.0.1
+  custom_lint: ^0.6.4
+  riverpod_lint: ^2.3.10
+
+  # ─── Testing ────────────────────────────────────────────────────
+  mocktail: ^1.0.3
+  flutter_test:
+    sdk: flutter
+
+  # ─── Linting ────────────────────────────────────────────────────
+  flutter_lints: ^4.0.0
+  very_good_analysis: ^6.0.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/images/
+    - assets/icons/
+    - assets/animations/
+    - assets/fonts/
+
+  fonts:
+    - family: Inter
+      fonts:
+        - asset: assets/fonts/Inter-Regular.ttf
+        - asset: assets/fonts/Inter-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Inter-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Inter-Bold.ttf
+          weight: 700

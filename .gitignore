@@ -1,0 +1,52 @@
+# Dart/Flutter
+.dart_tool/
+.packages
+build/
+*.lock
+pubspec.lock
+
+# Generated files (keep .g.dart and .freezed.dart in source control
+# if you don't want to run build_runner on every clone)
+# *.g.dart
+# *.freezed.dart
+
+# Firebase (NEVER commit real keys)
+lib/firebase_options.dart
+google-services.json
+GoogleService-Info.plist
+.firebaserc
+firebase.json
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# IDE
+.idea/
+.vscode/settings.json
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Android
+**/android/local.properties
+**/android/.gradle/
+**/android/captures/
+**/android/gradlew
+**/android/gradlew.bat
+**/android/gradle/wrapper/gradle-wrapper.jar
+
+# iOS
+**/ios/.symlinks/
+**/ios/Flutter/flutter_export_environment.sh
+**/ios/Pods/
+
+# Coverage
+coverage/
+*.lcov
+
+# Logs
+*.log
