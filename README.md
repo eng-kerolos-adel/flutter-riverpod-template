@@ -298,6 +298,6 @@ dart run build_runner build --delete-conflicting-outputs
 
 ## 📄 License
 
-MIT © [Kerolos Adel](https://kerolos-adel.vercel.app/). Use freely in personal and commercial projects.
+MIT © [Kerolos Adel](https://kerolos-adel.vercel.app/) . Use freely in personal and commercial projects.
 
 ---
