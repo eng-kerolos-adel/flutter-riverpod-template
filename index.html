@@ -1,781 +1,1372 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Flutter Riverpod Template — Production-Ready Flutter Boilerplate</title>
-  <meta name="description" content="A battle-tested Flutter template with Riverpod, GoRouter, Firebase, and feature-first clean architecture. Ship your app in days, not months.">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <style>
-    /* ─────────────────────────────────────────
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      Flutter Riverpod Template — Production-Ready Flutter Boilerplate
+    </title>
+    <meta
+      name="description"
+      content="A battle-tested Flutter template with Riverpod, GoRouter, Firebase, and feature-first clean architecture. Ship your app in days, not months."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* ─────────────────────────────────────────
        TOKENS — pulled directly from kerolos-adel.vercel.app
        background:  #0c0e14   (theme-color meta)
        accent blue: #0184ff   (msapplication-TileColor)
        ───────────────────────────────────────── */
-    :root {
-      --blue:        #0184ff;
-      --blue-dim:    #0066cc;
-      --blue-bright: #38a9ff;
-      --blue-glow:   rgba(1,132,255,0.14);
-      --blue-glow2:  rgba(1,132,255,0.06);
+      :root {
+        --blue: #0184ff;
+        --blue-dim: #0066cc;
+        --blue-bright: #38a9ff;
+        --blue-glow: rgba(1, 132, 255, 0.14);
+        --blue-glow2: rgba(1, 132, 255, 0.06);
 
-      --bg:          #0c0e14;
-      --bg-2:        #0f1219;
-      --bg-3:        #141820;
-      --bg-4:        #191e28;
-      --bg-card:     #111520;
+        --bg: #0c0e14;
+        --bg-2: #0f1219;
+        --bg-3: #141820;
+        --bg-4: #191e28;
+        --bg-card: #111520;
 
-      --border:      rgba(255,255,255,0.06);
-      --border-blue: rgba(1,132,255,0.22);
-      --border-hover:rgba(1,132,255,0.45);
+        --border: rgba(255, 255, 255, 0.06);
+        --border-blue: rgba(1, 132, 255, 0.22);
+        --border-hover: rgba(1, 132, 255, 0.45);
 
-      --text:        #e8edf5;
-      --text-2:      #a0aab8;
-      --text-3:      #60697a;
+        --text: #e8edf5;
+        --text-2: #a0aab8;
+        --text-3: #60697a;
 
-      --green:       #00d084;
-      --green-glow:  rgba(0,208,132,0.12);
+        --green: #00d084;
+        --green-glow: rgba(0, 208, 132, 0.12);
 
-      --mono: 'JetBrains Mono', monospace;
-      --sans: 'Inter', sans-serif;
+        --mono: "JetBrains Mono", monospace;
+        --sans: "Inter", sans-serif;
 
-      --radius-sm: 8px;
-      --radius:    12px;
-      --radius-lg: 18px;
-      --radius-xl: 24px;
-    }
+        --radius-sm: 8px;
+        --radius: 12px;
+        --radius-lg: 18px;
+        --radius-xl: 24px;
+      }
 
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        scroll-behavior: smooth;
+        -webkit-font-smoothing: antialiased;
+      }
 
-    body {
-      font-family: var(--sans);
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.6;
-      overflow-x: hidden;
-    }
+      body {
+        font-family: var(--sans);
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.6;
+        overflow-x: hidden;
+      }
 
-    /* ── Subtle dot grid (matches kerolos site feel) ── */
-    body::before {
-      content: '';
-      position: fixed; inset: 0;
-      background-image: radial-gradient(rgba(255,255,255,0.022) 1px, transparent 1px);
-      background-size: 28px 28px;
-      pointer-events: none;
-      z-index: 0;
-    }
+      /* ── Subtle dot grid (matches kerolos site feel) ── */
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background-image: radial-gradient(
+          rgba(255, 255, 255, 0.022) 1px,
+          transparent 1px
+        );
+        background-size: 28px 28px;
+        pointer-events: none;
+        z-index: 0;
+      }
 
-    /* ────────────────── NAV ────────────────── */
-    nav {
-      position: fixed; top: 0; left: 0; right: 0;
-      z-index: 200;
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 0 48px;
-      height: 62px;
-      background: rgba(12,14,20,0.85);
-      backdrop-filter: blur(16px) saturate(180%);
-      border-bottom: 1px solid var(--border);
-      transition: background .3s;
-    }
+      /* ────────────────── NAV ────────────────── */
+      nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 200;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 48px;
+        height: 62px;
+        background: rgba(12, 14, 20, 0.85);
+        backdrop-filter: blur(16px) saturate(180%);
+        border-bottom: 1px solid var(--border);
+        transition: background 0.3s;
+      }
 
-    .nav-logo {
-      display: flex; align-items: center; gap: 10px;
-      font-size: 14px; font-weight: 700; letter-spacing: -.3px;
-      color: var(--text); text-decoration: none;
-    }
-    .nav-logo-icon {
-      width: 32px; height: 32px; border-radius: 8px;
-      background: var(--blue);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 15px;
-      box-shadow: 0 0 18px rgba(1,132,255,0.45);
-    }
+      .nav-logo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 14px;
+        font-weight: 700;
+        letter-spacing: -0.3px;
+        color: var(--text);
+        text-decoration: none;
+      }
+      .nav-logo-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        background: var(--blue);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 15px;
+        box-shadow: 0 0 18px rgba(1, 132, 255, 0.45);
+      }
 
-    .nav-links {
-      display: flex; align-items: center; gap: 6px;
-      list-style: none;
-    }
-    .nav-links a {
-      padding: 6px 14px; border-radius: 6px;
-      color: var(--text-2); text-decoration: none;
-      font-size: 13.5px; font-weight: 500;
-      transition: color .2s, background .2s;
-    }
-    .nav-links a:hover { color: var(--text); background: var(--bg-3); }
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        list-style: none;
+      }
+      .nav-links a {
+        padding: 6px 14px;
+        border-radius: 6px;
+        color: var(--text-2);
+        text-decoration: none;
+        font-size: 13.5px;
+        font-weight: 500;
+        transition:
+          color 0.2s,
+          background 0.2s;
+      }
+      .nav-links a:hover {
+        color: var(--text);
+        background: var(--bg-3);
+      }
 
-    .nav-cta {
-      display: flex; align-items: center; gap: 8px;
-    }
-    .nav-btn {
-      display: flex; align-items: center; gap: 7px;
-      padding: 8px 18px; border-radius: var(--radius-sm);
-      font-size: 13px; font-weight: 600; font-family: var(--sans);
-      text-decoration: none; cursor: pointer; transition: all .2s;
-    }
-    .nav-btn-ghost {
-      background: transparent; border: 1px solid var(--border);
-      color: var(--text-2);
-    }
-    .nav-btn-ghost:hover { border-color: var(--border-blue); color: var(--text); background: var(--bg-3); }
-    .nav-btn-primary {
-      background: var(--blue); border: 1px solid transparent;
-      color: #fff;
-      box-shadow: 0 0 20px rgba(1,132,255,0.35);
-    }
-    .nav-btn-primary:hover {
-      background: var(--blue-dim);
-      box-shadow: 0 0 28px rgba(1,132,255,0.5);
-      transform: translateY(-1px);
-    }
+      .nav-cta {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .nav-btn {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        padding: 8px 18px;
+        border-radius: var(--radius-sm);
+        font-size: 13px;
+        font-weight: 600;
+        font-family: var(--sans);
+        text-decoration: none;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .nav-btn-ghost {
+        background: transparent;
+        border: 1px solid var(--border);
+        color: var(--text-2);
+      }
+      .nav-btn-ghost:hover {
+        border-color: var(--border-blue);
+        color: var(--text);
+        background: var(--bg-3);
+      }
+      .nav-btn-primary {
+        background: var(--blue);
+        border: 1px solid transparent;
+        color: #fff;
+        box-shadow: 0 0 20px rgba(1, 132, 255, 0.35);
+      }
+      .nav-btn-primary:hover {
+        background: var(--blue-dim);
+        box-shadow: 0 0 28px rgba(1, 132, 255, 0.5);
+        transform: translateY(-1px);
+      }
 
-    /* hamburger */
-    .nav-hamburger {
-      display: none;
-      flex-direction: column; gap: 5px;
-      cursor: pointer; padding: 4px;
-      background: none; border: none;
-    }
-    .nav-hamburger span {
-      display: block; width: 22px; height: 2px;
-      background: var(--text-2); border-radius: 2px;
-      transition: all .3s;
-    }
+      /* hamburger */
+      .nav-hamburger {
+        display: none;
+        flex-direction: column;
+        gap: 5px;
+        cursor: pointer;
+        padding: 4px;
+        background: none;
+        border: none;
+      }
+      .nav-hamburger span {
+        display: block;
+        width: 22px;
+        height: 2px;
+        background: var(--text-2);
+        border-radius: 2px;
+        transition: all 0.3s;
+      }
 
-    /* mobile nav drawer */
-    .nav-drawer {
-      display: none;
-      position: fixed; top: 62px; left: 0; right: 0; bottom: 0;
-      background: rgba(12,14,20,0.97);
-      backdrop-filter: blur(20px);
-      z-index: 190;
-      padding: 32px 24px;
-      flex-direction: column; gap: 8px;
-    }
-    .nav-drawer.open { display: flex; }
-    .nav-drawer a {
-      padding: 14px 16px; border-radius: var(--radius-sm);
-      color: var(--text-2); text-decoration: none;
-      font-size: 16px; font-weight: 500;
-      border: 1px solid transparent;
-      transition: all .2s;
-    }
-    .nav-drawer a:hover { color: var(--text); border-color: var(--border); background: var(--bg-3); }
-    .nav-drawer-cta { margin-top: 16px; }
+      /* mobile nav drawer */
+      .nav-drawer {
+        display: none;
+        position: fixed;
+        top: 62px;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(12, 14, 20, 0.97);
+        backdrop-filter: blur(20px);
+        z-index: 190;
+        padding: 32px 24px;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .nav-drawer.open {
+        display: flex;
+      }
+      .nav-drawer a {
+        padding: 14px 16px;
+        border-radius: var(--radius-sm);
+        color: var(--text-2);
+        text-decoration: none;
+        font-size: 16px;
+        font-weight: 500;
+        border: 1px solid transparent;
+        transition: all 0.2s;
+      }
+      .nav-drawer a:hover {
+        color: var(--text);
+        border-color: var(--border);
+        background: var(--bg-3);
+      }
+      .nav-drawer-cta {
+        margin-top: 16px;
+      }
 
-    /* ────────────────── HERO ────────────────── */
-    .hero {
-      position: relative; min-height: 100vh;
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      text-align: center;
-      padding: 130px 24px 100px;
-      isolation: isolate;
-    }
+      /* ────────────────── HERO ────────────────── */
+      .hero {
+        position: relative;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 130px 24px 100px;
+        isolation: isolate;
+      }
 
-    /* multi-layer glow background */
-    .hero-bg {
-      position: absolute; inset: 0; pointer-events: none;
-      overflow: hidden;
-    }
-    .hero-bg::before {
-      content: '';
-      position: absolute; top: -20%; left: 50%;
-      transform: translateX(-50%);
-      width: 900px; height: 600px;
-      background: radial-gradient(ellipse at 50% 30%, rgba(1,132,255,0.13) 0%, transparent 65%);
-    }
-    .hero-bg::after {
-      content: '';
-      position: absolute; bottom: 0; left: 50%;
-      transform: translateX(-50%);
-      width: 600px; height: 200px;
-      background: radial-gradient(ellipse at center, rgba(1,132,255,0.07) 0%, transparent 70%);
-    }
+      /* multi-layer glow background */
+      .hero-bg {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        overflow: hidden;
+      }
+      .hero-bg::before {
+        content: "";
+        position: absolute;
+        top: -20%;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 900px;
+        height: 600px;
+        background: radial-gradient(
+          ellipse at 50% 30%,
+          rgba(1, 132, 255, 0.13) 0%,
+          transparent 65%
+        );
+      }
+      .hero-bg::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 600px;
+        height: 200px;
+        background: radial-gradient(
+          ellipse at center,
+          rgba(1, 132, 255, 0.07) 0%,
+          transparent 70%
+        );
+      }
 
-    .hero-eyebrow {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 5px 16px; border-radius: 999px;
-      border: 1px solid var(--border-blue);
-      background: var(--blue-glow2);
-      font-size: 11.5px; font-weight: 600;
-      color: var(--blue-bright);
-      letter-spacing: .08em; text-transform: uppercase;
-      margin-bottom: 28px;
-    }
-    .hero-eyebrow-dot {
-      width: 6px; height: 6px; border-radius: 50%;
-      background: var(--green);
-      box-shadow: 0 0 6px var(--green);
-      animation: blink 2.5s infinite;
-    }
-    @keyframes blink {
-      0%,100% { opacity:1; } 50% { opacity:.3; }
-    }
+      .hero-eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 5px 16px;
+        border-radius: 999px;
+        border: 1px solid var(--border-blue);
+        background: var(--blue-glow2);
+        font-size: 11.5px;
+        font-weight: 600;
+        color: var(--blue-bright);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        margin-bottom: 28px;
+      }
+      .hero-eyebrow-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--green);
+        box-shadow: 0 0 6px var(--green);
+        animation: blink 2.5s infinite;
+      }
+      @keyframes blink {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.3;
+        }
+      }
 
-    .hero-title {
-      font-size: clamp(38px, 6.5vw, 84px);
-      font-weight: 900;
-      letter-spacing: -3px;
-      line-height: 1.0;
-      max-width: 860px;
-      margin-bottom: 20px;
-      color: var(--text);
-    }
-    .hero-title .word-flutter { color: var(--blue); }
-    .hero-title .word-gradient {
-      background: linear-gradient(90deg, var(--blue-bright) 0%, var(--blue) 50%, var(--green) 100%);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
+      .hero-title {
+        font-size: clamp(38px, 6.5vw, 84px);
+        font-weight: 900;
+        letter-spacing: -3px;
+        line-height: 1;
+        max-width: 860px;
+        margin-bottom: 20px;
+        color: var(--text);
+      }
+      .hero-title .word-flutter {
+        color: var(--blue);
+      }
+      .hero-title .word-gradient {
+        background: linear-gradient(
+          90deg,
+          var(--blue-bright) 0%,
+          var(--blue) 50%,
+          var(--green) 100%
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
 
-    .hero-sub {
-      font-size: clamp(15px, 2vw, 18px);
-      color: var(--text-2); max-width: 520px;
-      margin-bottom: 44px; line-height: 1.75;
-    }
+      .hero-sub {
+        font-size: clamp(15px, 2vw, 18px);
+        color: var(--text-2);
+        max-width: 520px;
+        margin-bottom: 44px;
+        line-height: 1.75;
+      }
 
-    .hero-actions {
-      display: flex; gap: 12px; flex-wrap: wrap;
-      justify-content: center; margin-bottom: 72px;
-    }
+      .hero-actions {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-bottom: 72px;
+      }
 
-    .btn-primary {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 13px 28px; border-radius: var(--radius-sm);
-      background: var(--blue); color: #fff;
-      font-size: 14px; font-weight: 600; font-family: var(--sans);
-      text-decoration: none; border: none; cursor: pointer;
-      box-shadow: 0 0 28px rgba(1,132,255,0.42);
-      transition: all .25s;
-    }
-    .btn-primary:hover {
-      background: var(--blue-dim); transform: translateY(-2px);
-      box-shadow: 0 6px 36px rgba(1,132,255,0.55);
-    }
-    .btn-secondary {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 13px 28px; border-radius: var(--radius-sm);
-      background: var(--bg-3); color: var(--text);
-      font-size: 14px; font-weight: 600; font-family: var(--sans);
-      text-decoration: none; border: 1px solid var(--border);
-      cursor: pointer; transition: all .25s;
-    }
-    .btn-secondary:hover { border-color: var(--border-blue); background: var(--bg-4); transform: translateY(-2px); }
+      .btn-primary {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 13px 28px;
+        border-radius: var(--radius-sm);
+        background: var(--blue);
+        color: #fff;
+        font-size: 14px;
+        font-weight: 600;
+        font-family: var(--sans);
+        text-decoration: none;
+        border: none;
+        cursor: pointer;
+        box-shadow: 0 0 28px rgba(1, 132, 255, 0.42);
+        transition: all 0.25s;
+      }
+      .btn-primary:hover {
+        background: var(--blue-dim);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 36px rgba(1, 132, 255, 0.55);
+      }
+      .btn-secondary {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 13px 28px;
+        border-radius: var(--radius-sm);
+        background: var(--bg-3);
+        color: var(--text);
+        font-size: 14px;
+        font-weight: 600;
+        font-family: var(--sans);
+        text-decoration: none;
+        border: 1px solid var(--border);
+        cursor: pointer;
+        transition: all 0.25s;
+      }
+      .btn-secondary:hover {
+        border-color: var(--border-blue);
+        background: var(--bg-4);
+        transform: translateY(-2px);
+      }
 
-    /* ── Stats ── */
-    .hero-stats {
-      display: flex; align-items: center; gap: 0;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      background: var(--bg-2);
-      overflow: hidden;
-    }
-    .stat-item {
-      padding: 20px 36px; text-align: center;
-      border-right: 1px solid var(--border);
-    }
-    .stat-item:last-child { border-right: none; }
-    .stat-num {
-      font-size: 26px; font-weight: 800;
-      color: var(--text); letter-spacing: -1px;
-      line-height: 1;
-    }
-    .stat-num span { color: var(--blue); }
-    .stat-label { font-size: 11.5px; color: var(--text-3); margin-top: 4px; letter-spacing: .04em; }
-
-    /* ────────────────── CODE PREVIEW ────────────────── */
-    .section {
-      position: relative; z-index: 1;
-      padding: 96px 24px;
-    }
-    .section-inner { max-width: 1160px; margin: 0 auto; }
-    .section-eyebrow {
-      font-size: 11px; font-weight: 700; letter-spacing: .12em;
-      text-transform: uppercase; color: var(--blue);
-      margin-bottom: 14px; display: block;
-    }
-    .section-title {
-      font-size: clamp(26px, 3.8vw, 48px);
-      font-weight: 800; letter-spacing: -1.5px; line-height: 1.1;
-      margin-bottom: 14px;
-    }
-    .section-sub {
-      font-size: 16px; color: var(--text-2);
-      max-width: 540px; line-height: 1.75;
-      margin-bottom: 52px;
-    }
-
-    /* code window */
-    .code-window {
-      border-radius: var(--radius-lg);
-      border: 1px solid var(--border);
-      background: var(--bg-card);
-      overflow: hidden;
-      box-shadow: 0 24px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(1,132,255,0.05);
-    }
-    .code-titlebar {
-      display: flex; align-items: center; gap: 8px;
-      padding: 12px 20px;
-      background: var(--bg-3);
-      border-bottom: 1px solid var(--border);
-    }
-    .dot { width: 12px; height: 12px; border-radius: 50%; }
-    .dot-r { background: #ff5f57; } .dot-y { background: #febc2e; } .dot-g { background: #28c840; }
-    .code-filename {
-      margin-left: auto; font-size: 12px;
-      font-family: var(--mono); color: var(--text-3);
-    }
-    .code-tabs {
-      display: flex; border-bottom: 1px solid var(--border);
-      overflow-x: auto; scrollbar-width: none;
-    }
-    .code-tabs::-webkit-scrollbar { display: none; }
-    .code-tab {
-      padding: 10px 18px; font-size: 12px; font-family: var(--mono);
-      color: var(--text-3); cursor: pointer; border: none;
-      background: none; white-space: nowrap;
-      border-bottom: 2px solid transparent;
-      transition: all .2s; flex-shrink: 0;
-    }
-    .code-tab.active { color: var(--blue); border-bottom-color: var(--blue); }
-    .code-tab:hover:not(.active) { color: var(--text-2); }
-    .code-body { padding: 28px; overflow-x: auto; }
-    .code-body::-webkit-scrollbar { height: 4px; }
-    .code-body::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
-    .code-panel { display: none; }
-    .code-panel.active { display: block; }
-    pre {
-      font-family: var(--mono); font-size: 13px;
-      line-height: 1.75; white-space: pre; color: #c9d1e0;
-      tab-size: 2;
-    }
-    /* syntax tokens */
-    .kw  { color: #6eb3f7; }
-    .fn  { color: #67e8f9; }
-    .st  { color: #86efac; }
-    .cm  { color: #3d4a5c; font-style: italic; }
-    .cl  { color: #f7c25e; }
-    .nn  { color: #c084fc; }
-    .op  { color: #5d6e82; }
-    .nb  { color: #fb923c; }
-
-    /* ────────────────── FEATURES GRID ────────────────── */
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
-    }
-
-    .feature-card {
-      padding: 28px 26px;
-      border-radius: var(--radius-lg);
-      border: 1px solid var(--border);
-      background: var(--bg-card);
-      transition: all .3s;
-      position: relative; overflow: hidden;
-      cursor: default;
-    }
-    .feature-card::before {
-      content: ''; position: absolute; inset: 0;
-      background: linear-gradient(135deg, var(--blue-glow) 0%, transparent 55%);
-      opacity: 0; transition: opacity .35s;
-    }
-    .feature-card:hover { border-color: var(--border-blue); transform: translateY(-3px); }
-    .feature-card:hover::before { opacity: 1; }
-
-    .feature-icon {
-      width: 42px; height: 42px; border-radius: var(--radius-sm);
-      background: var(--blue-glow); border: 1px solid var(--border-blue);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 18px; margin-bottom: 18px;
-      position: relative;
-    }
-    .feature-title { font-size: 15px; font-weight: 700; margin-bottom: 8px; letter-spacing: -.25px; }
-    .feature-desc { font-size: 13.5px; color: var(--text-2); line-height: 1.65; }
-    .feature-desc code {
-      font-family: var(--mono); font-size: 12px;
-      background: var(--bg-3); padding: 1px 6px;
-      border-radius: 4px; color: var(--blue-bright);
-    }
-
-    /* ────────────────── ARCHITECTURE ────────────────── */
-    .arch-section {
-      padding: 96px 24px;
-      background: var(--bg-2);
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-      position: relative; z-index: 1;
-    }
-
-    .arch-body {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: start;
-    }
-
-    .arch-diagram { display: flex; flex-direction: column; gap: 0; }
-    .arch-layer {
-      padding: 20px 24px; display: flex;
-      align-items: center; gap: 20px;
-      border: 1px solid var(--border);
-      transition: border-color .3s;
-    }
-    .arch-layer:first-child { border-radius: var(--radius-sm) var(--radius-sm) 0 0; }
-    .arch-layer:last-child  { border-radius: 0 0 var(--radius-sm) var(--radius-sm); border-top: none; }
-    .arch-layer.mid { border-top: none; }
-    .arch-layer.presentation { border-color: rgba(1,132,255,0.35); background: rgba(1,132,255,0.05); }
-    .arch-layer.domain        { border-color: rgba(0,208,132,0.3); background: rgba(0,208,132,0.04); }
-    .arch-layer.data          { border-color: rgba(251,191,36,0.3); background: rgba(251,191,36,0.04); }
-
-    .arch-layer-label {
-      font-size: 11px; font-weight: 700;
-      text-transform: uppercase; letter-spacing: .1em;
-      width: 110px; flex-shrink: 0;
-    }
-    .arch-layer.presentation .arch-layer-label { color: var(--blue-bright); }
-    .arch-layer.domain .arch-layer-label        { color: var(--green); }
-    .arch-layer.data .arch-layer-label          { color: #fbbf24; }
-
-    .arch-pills { display: flex; gap: 6px; flex-wrap: wrap; }
-    .arch-pill {
-      padding: 3px 10px; border-radius: 5px;
-      font-size: 11.5px; font-family: var(--mono);
-      background: rgba(255,255,255,0.04);
-      border: 1px solid var(--border); color: var(--text-2);
-    }
-
-    .arch-arrow {
-      text-align: center; padding: 10px 0;
-      font-size: 11px; color: var(--text-3); letter-spacing: .06em;
-    }
-
-    /* rules list */
-    .arch-rules { display: flex; flex-direction: column; gap: 20px; padding-top: 8px; }
-    .arch-rule { display: flex; gap: 14px; align-items: flex-start; }
-    .arch-rule-num {
-      font-family: var(--mono); font-size: 11px;
-      color: var(--blue); background: var(--blue-glow);
-      border: 1px solid var(--border-blue);
-      width: 26px; height: 26px; border-radius: 6px;
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0; margin-top: 1px;
-    }
-    .arch-rule-text h4 { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
-    .arch-rule-text p  { font-size: 13px; color: var(--text-2); line-height: 1.6; }
-
-    /* ────────────────── PACKAGES GRID ────────────────── */
-    .packages-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 10px;
-    }
-    .pkg-card {
-      display: flex; align-items: center; gap: 12px;
-      padding: 14px 18px;
-      border-radius: var(--radius-sm);
-      border: 1px solid var(--border);
-      background: var(--bg-card);
-      transition: all .25s;
-    }
-    .pkg-card:hover { border-color: var(--border-blue); background: var(--bg-3); }
-    .pkg-icon { font-size: 18px; flex-shrink: 0; }
-    .pkg-name { font-size: 12.5px; font-weight: 600; font-family: var(--mono); color: var(--text); }
-    .pkg-ver  { font-size: 11px; color: var(--text-3); margin-top: 1px; font-family: var(--mono); }
-
-    /* ────────────────── TERMINAL / QUICK START ────────────────── */
-    .terminal {
-      border-radius: var(--radius-lg);
-      border: 1px solid var(--border);
-      background: #080a0f;
-      overflow: hidden;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.6);
-    }
-    .terminal-bar {
-      display: flex; align-items: center; gap: 8px;
-      padding: 12px 18px;
-      background: var(--bg-3); border-bottom: 1px solid var(--border);
-    }
-    .terminal-title {
-      margin-left: auto; font-size: 12px;
-      font-family: var(--mono); color: var(--text-3);
-    }
-    .terminal-body { padding: 28px 32px; }
-    .terminal-body pre {
-      font-family: var(--mono); font-size: 13px;
-      line-height: 1.9; white-space: pre; color: #8b97a8;
-    }
-    .t-prompt { color: var(--blue); }
-    .t-cmd    { color: #e2e8f0; }
-    .t-arg    { color: var(--green); }
-    .t-cmt    { color: #3d4a5c; font-style: italic; }
-    .t-out    { color: #6b7280; }
-
-    /* steps */
-    .steps { display: flex; flex-direction: column; gap: 24px; }
-    .step { display: flex; gap: 18px; align-items: flex-start; }
-    .step-num {
-      width: 32px; height: 32px; border-radius: 50%;
-      border: 1px solid var(--border-blue);
-      background: var(--blue-glow);
-      color: var(--blue); font-size: 13px; font-weight: 700;
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0;
-    }
-    .step-body h4 { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
-    .step-body p  { font-size: 13px; color: var(--text-2); line-height: 1.6; }
-    .step-body code {
-      font-family: var(--mono); font-size: 12px;
-      color: var(--green); background: var(--bg-3);
-      padding: 1px 7px; border-radius: 4px;
-    }
-
-    /* ────────────────── CTA ────────────────── */
-    .cta-section {
-      padding: 120px 24px;
-      text-align: center;
-      position: relative; z-index: 1;
-      overflow: hidden;
-    }
-    .cta-bg {
-      position: absolute; inset: 0; pointer-events: none;
-    }
-    .cta-bg::before {
-      content: '';
-      position: absolute; top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      width: 800px; height: 400px;
-      background: radial-gradient(ellipse, rgba(1,132,255,0.1) 0%, transparent 65%);
-    }
-    .cta-section h2 {
-      font-size: clamp(32px, 5.5vw, 68px);
-      font-weight: 900; letter-spacing: -2.5px; line-height: 1.05;
-      margin-bottom: 18px;
-    }
-    .cta-section p { font-size: 17px; color: var(--text-2); margin-bottom: 40px; }
-
-    /* ────────────────── FOOTER ────────────────── */
-    footer {
-      padding: 32px 48px;
-      border-top: 1px solid var(--border);
-      display: flex; align-items: center; justify-content: space-between;
-      position: relative; z-index: 1;
-      flex-wrap: wrap; gap: 12px;
-    }
-    .footer-left { font-size: 13px; color: var(--text-3); }
-    .footer-left a { color: var(--blue); text-decoration: none; }
-    .footer-right { display: flex; align-items: center; gap: 6px; }
-    .footer-badge {
-      padding: 4px 10px; border-radius: 5px;
-      border: 1px solid var(--border); background: var(--bg-3);
-      font-size: 11px; font-family: var(--mono); color: var(--text-3);
-    }
-
-    /* ────────────────── SCROLLBAR ────────────────── */
-    ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: var(--bg); }
-    ::-webkit-scrollbar-thumb { background: var(--bg-4); border-radius: 3px; }
-
-    /* ────────────────── RESPONSIVE ────────────────── */
-    @media (max-width: 1024px) {
-      .features-grid { grid-template-columns: repeat(2, 1fr); }
-      .arch-body { grid-template-columns: 1fr; gap: 48px; }
-    }
-
-    @media (max-width: 768px) {
-      nav { padding: 0 20px; }
-      .nav-links, .nav-cta { display: none; }
-      .nav-hamburger { display: flex; }
-
-      .hero { padding: 110px 20px 80px; }
+      /* ── Stats ── */
       .hero-stats {
-        flex-wrap: wrap; border-radius: var(--radius);
-        border: none; background: none; gap: 12px;
+        display: flex;
+        align-items: center;
+        gap: 0;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        background: var(--bg-2);
+        overflow: hidden;
       }
       .stat-item {
-        flex: 1; min-width: 100px;
-        border: 1px solid var(--border);
-        border-radius: var(--radius-sm);
-        background: var(--bg-2); border-right: 1px solid var(--border);
+        padding: 20px 36px;
+        text-align: center;
+        border-right: 1px solid var(--border);
+      }
+      .stat-item:last-child {
+        border-right: none;
+      }
+      .stat-num {
+        font-size: 26px;
+        font-weight: 800;
+        color: var(--text);
+        letter-spacing: -1px;
+        line-height: 1;
+      }
+      .stat-num span {
+        color: var(--blue);
+      }
+      .stat-label {
+        font-size: 11.5px;
+        color: var(--text-3);
+        margin-top: 4px;
+        letter-spacing: 0.04em;
       }
 
-      .features-grid { grid-template-columns: 1fr; }
-      .section { padding: 64px 20px; }
-      .arch-section { padding: 64px 20px; }
-      .arch-layer { flex-direction: column; align-items: flex-start; gap: 12px; }
-      .arch-layer-label { width: auto; }
+      /* ────────────────── CODE PREVIEW ────────────────── */
+      .section {
+        position: relative;
+        z-index: 1;
+        padding: 96px 24px;
+      }
+      .section-inner {
+        max-width: 1160px;
+        margin: 0 auto;
+      }
+      .section-eyebrow {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--blue);
+        margin-bottom: 14px;
+        display: block;
+      }
+      .section-title {
+        font-size: clamp(26px, 3.8vw, 48px);
+        font-weight: 800;
+        letter-spacing: -1.5px;
+        line-height: 1.1;
+        margin-bottom: 14px;
+      }
+      .section-sub {
+        font-size: 16px;
+        color: var(--text-2);
+        max-width: 540px;
+        line-height: 1.75;
+        margin-bottom: 52px;
+      }
 
-      footer { padding: 28px 20px; flex-direction: column; text-align: center; }
-      .cta-section { padding: 80px 20px; }
+      /* code window */
+      .code-window {
+        border-radius: var(--radius-lg);
+        border: 1px solid var(--border);
+        background: var(--bg-card);
+        overflow: hidden;
+        box-shadow:
+          0 24px 80px rgba(0, 0, 0, 0.5),
+          0 0 0 1px rgba(1, 132, 255, 0.05);
+      }
+      .code-titlebar {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 20px;
+        background: var(--bg-3);
+        border-bottom: 1px solid var(--border);
+      }
+      .dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+      }
+      .dot-r {
+        background: #ff5f57;
+      }
+      .dot-y {
+        background: #febc2e;
+      }
+      .dot-g {
+        background: #28c840;
+      }
+      .code-filename {
+        margin-left: auto;
+        font-size: 12px;
+        font-family: var(--mono);
+        color: var(--text-3);
+      }
+      .code-tabs {
+        display: flex;
+        border-bottom: 1px solid var(--border);
+        overflow-x: auto;
+        scrollbar-width: none;
+      }
+      .code-tabs::-webkit-scrollbar {
+        display: none;
+      }
+      .code-tab {
+        padding: 10px 18px;
+        font-size: 12px;
+        font-family: var(--mono);
+        color: var(--text-3);
+        cursor: pointer;
+        border: none;
+        background: none;
+        white-space: nowrap;
+        border-bottom: 2px solid transparent;
+        transition: all 0.2s;
+        flex-shrink: 0;
+      }
+      .code-tab.active {
+        color: var(--blue);
+        border-bottom-color: var(--blue);
+      }
+      .code-tab:hover:not(.active) {
+        color: var(--text-2);
+      }
+      .code-body {
+        padding: 28px;
+        overflow-x: auto;
+      }
+      .code-body::-webkit-scrollbar {
+        height: 4px;
+      }
+      .code-body::-webkit-scrollbar-thumb {
+        background: var(--border);
+        border-radius: 2px;
+      }
+      .code-panel {
+        display: none;
+      }
+      .code-panel.active {
+        display: block;
+      }
+      pre {
+        font-family: var(--mono);
+        font-size: 13px;
+        line-height: 1.75;
+        white-space: pre;
+        color: #c9d1e0;
+        tab-size: 2;
+      }
+      /* syntax tokens */
+      .kw {
+        color: #6eb3f7;
+      }
+      .fn {
+        color: #67e8f9;
+      }
+      .st {
+        color: #86efac;
+      }
+      .cm {
+        color: #3d4a5c;
+        font-style: italic;
+      }
+      .cl {
+        color: #f7c25e;
+      }
+      .nn {
+        color: #c084fc;
+      }
+      .op {
+        color: #5d6e82;
+      }
+      .nb {
+        color: #fb923c;
+      }
 
-      .hero-title { letter-spacing: -2px; }
-      .section-title { letter-spacing: -1px; }
-    }
+      /* ────────────────── FEATURES GRID ────────────────── */
+      .features-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+      }
 
-    @media (max-width: 480px) {
-      .hero-actions { flex-direction: column; width: 100%; }
-      .btn-primary, .btn-secondary { width: 100%; justify-content: center; }
-      .packages-grid { grid-template-columns: 1fr 1fr; }
-      .stat-num { font-size: 22px; }
-    }
+      .feature-card {
+        padding: 28px 26px;
+        border-radius: var(--radius-lg);
+        border: 1px solid var(--border);
+        background: var(--bg-card);
+        transition: all 0.3s;
+        position: relative;
+        overflow: hidden;
+        cursor: default;
+      }
+      .feature-card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          135deg,
+          var(--blue-glow) 0%,
+          transparent 55%
+        );
+        opacity: 0;
+        transition: opacity 0.35s;
+      }
+      .feature-card:hover {
+        border-color: var(--border-blue);
+        transform: translateY(-3px);
+      }
+      .feature-card:hover::before {
+        opacity: 1;
+      }
 
-    /* ────────────────── ANIMATIONS ────────────────── */
-    .fade-up {
-      opacity: 0;
-      transform: translateY(24px);
-      transition: opacity .6s ease, transform .6s ease;
-    }
-    .fade-up.visible { opacity: 1; transform: none; }
-    .fade-up:nth-child(1) { transition-delay: 0s; }
-    .fade-up:nth-child(2) { transition-delay: .08s; }
-    .fade-up:nth-child(3) { transition-delay: .16s; }
-    .fade-up:nth-child(4) { transition-delay: .24s; }
-    .fade-up:nth-child(5) { transition-delay: .32s; }
-    .fade-up:nth-child(6) { transition-delay: .40s; }
+      .feature-icon {
+        width: 42px;
+        height: 42px;
+        border-radius: var(--radius-sm);
+        background: var(--blue-glow);
+        border: 1px solid var(--border-blue);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        margin-bottom: 18px;
+        position: relative;
+      }
+      .feature-title {
+        font-size: 15px;
+        font-weight: 700;
+        margin-bottom: 8px;
+        letter-spacing: -0.25px;
+      }
+      .feature-desc {
+        font-size: 13.5px;
+        color: var(--text-2);
+        line-height: 1.65;
+      }
+      .feature-desc code {
+        font-family: var(--mono);
+        font-size: 12px;
+        background: var(--bg-3);
+        padding: 1px 6px;
+        border-radius: 4px;
+        color: var(--blue-bright);
+      }
 
-    /* horizontal scroll marquee for tech stack */
-    .marquee-wrap { overflow: hidden; position: relative; }
-    .marquee-wrap::before, .marquee-wrap::after {
-      content: ''; position: absolute; top: 0; bottom: 0; z-index: 2; width: 80px;
-    }
-    .marquee-wrap::before { left: 0; background: linear-gradient(to right, var(--bg-2), transparent); }
-    .marquee-wrap::after  { right: 0; background: linear-gradient(to left,  var(--bg-2), transparent); }
-    .marquee-track {
-      display: flex; gap: 10px;
-      animation: scroll 28s linear infinite;
-      width: max-content;
-    }
-    .marquee-track:hover { animation-play-state: paused; }
-    @keyframes scroll {
-      0%   { transform: translateX(0); }
-      100% { transform: translateX(-50%); }
-    }
-    .marquee-item {
-      display: flex; align-items: center; gap: 8px;
-      padding: 10px 18px; border-radius: var(--radius-sm);
-      border: 1px solid var(--border); background: var(--bg-card);
-      font-size: 13px; font-weight: 500; color: var(--text-2);
-      white-space: nowrap; flex-shrink: 0;
-    }
-    .marquee-item span { font-size: 16px; }
-  </style>
-</head>
-<body>
+      /* ────────────────── ARCHITECTURE ────────────────── */
+      .arch-section {
+        padding: 96px 24px;
+        background: var(--bg-2);
+        border-top: 1px solid var(--border);
+        border-bottom: 1px solid var(--border);
+        position: relative;
+        z-index: 1;
+      }
 
-<!-- ─── NAV ─── -->
-<nav id="nav">
-  <a href="#" class="nav-logo">
-    <div class="nav-logo-icon">🎯</div>
-    Flutter Template
-  </a>
+      .arch-body {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 64px;
+        align-items: start;
+      }
 
-  <ul class="nav-links">
-    <li><a href="#features">Features</a></li>
-    <li><a href="#architecture">Architecture</a></li>
-    <li><a href="#packages">Packages</a></li>
-    <li><a href="#quickstart">Quick Start</a></li>
-  </ul>
+      .arch-diagram {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+      }
+      .arch-layer {
+        padding: 20px 24px;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        border: 1px solid var(--border);
+        transition: border-color 0.3s;
+      }
+      .arch-layer:first-child {
+        border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+      }
+      .arch-layer:last-child {
+        border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+        border-top: none;
+      }
+      .arch-layer.mid {
+        border-top: none;
+      }
+      .arch-layer.presentation {
+        border-color: rgba(1, 132, 255, 0.35);
+        background: rgba(1, 132, 255, 0.05);
+      }
+      .arch-layer.domain {
+        border-color: rgba(0, 208, 132, 0.3);
+        background: rgba(0, 208, 132, 0.04);
+      }
+      .arch-layer.data {
+        border-color: rgba(251, 191, 36, 0.3);
+        background: rgba(251, 191, 36, 0.04);
+      }
 
-  <div class="nav-cta">
-    <a href="https://github.com/kerolosadel/flutter-riverpod-template" class="nav-btn nav-btn-ghost" target="_blank">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
-      GitHub
-    </a>
-    <a href="https://github.com/kerolosadel/flutter-riverpod-template" class="nav-btn nav-btn-primary" target="_blank">
-      Use Template →
-    </a>
-  </div>
+      .arch-layer-label {
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        width: 110px;
+        flex-shrink: 0;
+      }
+      .arch-layer.presentation .arch-layer-label {
+        color: var(--blue-bright);
+      }
+      .arch-layer.domain .arch-layer-label {
+        color: var(--green);
+      }
+      .arch-layer.data .arch-layer-label {
+        color: #fbbf24;
+      }
 
-  <button class="nav-hamburger" onclick="toggleMenu()" aria-label="Menu">
-    <span></span><span></span><span></span>
-  </button>
-</nav>
+      .arch-pills {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+      }
+      .arch-pill {
+        padding: 3px 10px;
+        border-radius: 5px;
+        font-size: 11.5px;
+        font-family: var(--mono);
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid var(--border);
+        color: var(--text-2);
+      }
 
-<!-- Mobile Drawer -->
-<div class="nav-drawer" id="drawer">
-  <a href="#features" onclick="toggleMenu()">Features</a>
-  <a href="#architecture" onclick="toggleMenu()">Architecture</a>
-  <a href="#packages" onclick="toggleMenu()">Packages</a>
-  <a href="#quickstart" onclick="toggleMenu()">Quick Start</a>
-  <div class="nav-drawer-cta" style="display:flex;gap:10px;margin-top:8px;">
-    <a href="https://github.com/kerolosadel/flutter-riverpod-template" class="nav-btn nav-btn-ghost" style="flex:1;justify-content:center;" target="_blank">GitHub</a>
-    <a href="https://github.com/kerolosadel/flutter-riverpod-template" class="nav-btn nav-btn-primary" style="flex:1;justify-content:center;" target="_blank">Use Template</a>
-  </div>
-</div>
+      .arch-arrow {
+        text-align: center;
+        padding: 10px 0;
+        font-size: 11px;
+        color: var(--text-3);
+        letter-spacing: 0.06em;
+      }
 
-<!-- ─── HERO ─── -->
-<section class="hero">
-  <div class="hero-bg"></div>
+      /* rules list */
+      .arch-rules {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        padding-top: 8px;
+      }
+      .arch-rule {
+        display: flex;
+        gap: 14px;
+        align-items: flex-start;
+      }
+      .arch-rule-num {
+        font-family: var(--mono);
+        font-size: 11px;
+        color: var(--blue);
+        background: var(--blue-glow);
+        border: 1px solid var(--border-blue);
+        width: 26px;
+        height: 26px;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        margin-top: 1px;
+      }
+      .arch-rule-text h4 {
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 4px;
+      }
+      .arch-rule-text p {
+        font-size: 13px;
+        color: var(--text-2);
+        line-height: 1.6;
+      }
 
-  <div class="hero-eyebrow">
-    <div class="hero-eyebrow-dot"></div>
-    Open Source · Free Forever · MIT License
-  </div>
+      /* ────────────────── PACKAGES GRID ────────────────── */
+      .packages-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 10px;
+      }
+      .pkg-card {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 14px 18px;
+        border-radius: var(--radius-sm);
+        border: 1px solid var(--border);
+        background: var(--bg-card);
+        transition: all 0.25s;
+      }
+      .pkg-card:hover {
+        border-color: var(--border-blue);
+        background: var(--bg-3);
+      }
+      .pkg-icon {
+        font-size: 18px;
+        flex-shrink: 0;
+      }
+      .pkg-name {
+        font-size: 12.5px;
+        font-weight: 600;
+        font-family: var(--mono);
+        color: var(--text);
+      }
+      .pkg-ver {
+        font-size: 11px;
+        color: var(--text-3);
+        margin-top: 1px;
+        font-family: var(--mono);
+      }
 
-  <h1 class="hero-title">
-    Ship <span class="word-flutter">Flutter</span> apps<br>
-    <span class="word-gradient">in days, not months</span>
-  </h1>
+      /* ────────────────── TERMINAL / QUICK START ────────────────── */
+      .terminal {
+        border-radius: var(--radius-lg);
+        border: 1px solid var(--border);
+        background: #080a0f;
+        overflow: hidden;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+      }
+      .terminal-bar {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 18px;
+        background: var(--bg-3);
+        border-bottom: 1px solid var(--border);
+      }
+      .terminal-title {
+        margin-left: auto;
+        font-size: 12px;
+        font-family: var(--mono);
+        color: var(--text-3);
+      }
+      .terminal-body {
+        padding: 28px 32px;
+      }
+      .terminal-body pre {
+        font-family: var(--mono);
+        font-size: 13px;
+        line-height: 1.9;
+        white-space: pre;
+        color: #8b97a8;
+      }
+      .t-prompt {
+        color: var(--blue);
+      }
+      .t-cmd {
+        color: #e2e8f0;
+      }
+      .t-arg {
+        color: var(--green);
+      }
+      .t-cmt {
+        color: #3d4a5c;
+        font-style: italic;
+      }
+      .t-out {
+        color: #6b7280;
+      }
 
-  <p class="hero-sub">
-    A production-ready template with Riverpod 2.x, GoRouter, the full Firebase suite, and feature-first clean architecture. Battle-tested across real apps with real users.
-  </p>
+      /* steps */
+      .steps {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+      }
+      .step {
+        display: flex;
+        gap: 18px;
+        align-items: flex-start;
+      }
+      .step-num {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        border: 1px solid var(--border-blue);
+        background: var(--blue-glow);
+        color: var(--blue);
+        font-size: 13px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+      .step-body h4 {
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 4px;
+      }
+      .step-body p {
+        font-size: 13px;
+        color: var(--text-2);
+        line-height: 1.6;
+      }
+      .step-body code {
+        font-family: var(--mono);
+        font-size: 12px;
+        color: var(--green);
+        background: var(--bg-3);
+        padding: 1px 7px;
+        border-radius: 4px;
+      }
 
-  <div class="hero-actions">
-    <a href="https://github.com/kerolosadel/flutter-riverpod-template" class="btn-primary" target="_blank">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
-      Use This Template
-    </a>
-    <a href="#features" class="btn-secondary">
-      Explore Features ↓
-    </a>
-  </div>
+      /* ────────────────── CTA ────────────────── */
+      .cta-section {
+        padding: 120px 24px;
+        text-align: center;
+        position: relative;
+        z-index: 1;
+        overflow: hidden;
+      }
+      .cta-bg {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+      }
+      .cta-bg::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 800px;
+        height: 400px;
+        background: radial-gradient(
+          ellipse,
+          rgba(1, 132, 255, 0.1) 0%,
+          transparent 65%
+        );
+      }
+      .cta-section h2 {
+        font-size: clamp(32px, 5.5vw, 68px);
+        font-weight: 900;
+        letter-spacing: -2.5px;
+        line-height: 1.05;
+        margin-bottom: 18px;
+      }
+      .cta-section p {
+        font-size: 17px;
+        color: var(--text-2);
+        margin-bottom: 40px;
+      }
 
-  <div class="hero-stats">
-    <div class="stat-item">
-      <div class="stat-num"><span>48</span></div>
-      <div class="stat-label">Dart Files</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-num"><span>30</span>+</div>
-      <div class="stat-label">Packages</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-num"><span>8</span></div>
-      <div class="stat-label">Firebase Services</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-num"><span>3</span></div>
-      <div class="stat-label">Clean Layers</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-num"><span>6</span></div>
-      <div class="stat-label">Unit Tests</div>
-    </div>
-  </div>
-</section>
+      /* ────────────────── FOOTER ────────────────── */
+      footer {
+        padding: 32px 48px;
+        border-top: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: relative;
+        z-index: 1;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+      .footer-left {
+        font-size: 13px;
+        color: var(--text-3);
+      }
+      .footer-left a {
+        color: var(--blue);
+        text-decoration: none;
+      }
+      .footer-right {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .footer-badge {
+        padding: 4px 10px;
+        border-radius: 5px;
+        border: 1px solid var(--border);
+        background: var(--bg-3);
+        font-size: 11px;
+        font-family: var(--mono);
+        color: var(--text-3);
+      }
 
-<!-- ─── CODE PREVIEW ─── -->
-<section class="section" id="code">
-  <div class="section-inner">
-    <span class="section-eyebrow">Code Preview</span>
-    <h2 class="section-title">Clean code.<br>Consistent patterns.</h2>
-    <p class="section-sub">Every feature follows the same structure. You'll never have to guess where something goes.</p>
+      /* ────────────────── SCROLLBAR ────────────────── */
+      ::-webkit-scrollbar {
+        width: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: var(--bg);
+      }
+      ::-webkit-scrollbar-thumb {
+        background: var(--bg-4);
+        border-radius: 3px;
+      }
 
-    <div class="code-window">
-      <div class="code-titlebar">
-        <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
-        <span class="code-filename">flutter_riverpod_template / lib</span>
+      /* ────────────────── RESPONSIVE ────────────────── */
+      @media (max-width: 1024px) {
+        .features-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .arch-body {
+          grid-template-columns: 1fr;
+          gap: 48px;
+        }
+      }
+
+      @media (max-width: 768px) {
+        nav {
+          padding: 0 20px;
+        }
+        .nav-links,
+        .nav-cta {
+          display: none;
+        }
+        .nav-hamburger {
+          display: flex;
+        }
+
+        .hero {
+          padding: 110px 20px 80px;
+        }
+        .hero-stats {
+          flex-wrap: wrap;
+          border-radius: var(--radius);
+          border: none;
+          background: none;
+          gap: 12px;
+        }
+        .stat-item {
+          flex: 1;
+          min-width: 100px;
+          border: 1px solid var(--border);
+          border-radius: var(--radius-sm);
+          background: var(--bg-2);
+          border-right: 1px solid var(--border);
+        }
+
+        .features-grid {
+          grid-template-columns: 1fr;
+        }
+        .section {
+          padding: 64px 20px;
+        }
+        .arch-section {
+          padding: 64px 20px;
+        }
+        .arch-layer {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 12px;
+        }
+        .arch-layer-label {
+          width: auto;
+        }
+
+        footer {
+          padding: 28px 20px;
+          flex-direction: column;
+          text-align: center;
+        }
+        .cta-section {
+          padding: 80px 20px;
+        }
+
+        .hero-title {
+          letter-spacing: -2px;
+        }
+        .section-title {
+          letter-spacing: -1px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .hero-actions {
+          flex-direction: column;
+          width: 100%;
+        }
+        .btn-primary,
+        .btn-secondary {
+          width: 100%;
+          justify-content: center;
+        }
+        .packages-grid {
+          grid-template-columns: 1fr 1fr;
+        }
+        .stat-num {
+          font-size: 22px;
+        }
+      }
+
+      /* ────────────────── ANIMATIONS ────────────────── */
+      .fade-up {
+        opacity: 0;
+        transform: translateY(24px);
+        transition:
+          opacity 0.6s ease,
+          transform 0.6s ease;
+      }
+      .fade-up.visible {
+        opacity: 1;
+        transform: none;
+      }
+      .fade-up:nth-child(1) {
+        transition-delay: 0s;
+      }
+      .fade-up:nth-child(2) {
+        transition-delay: 0.08s;
+      }
+      .fade-up:nth-child(3) {
+        transition-delay: 0.16s;
+      }
+      .fade-up:nth-child(4) {
+        transition-delay: 0.24s;
+      }
+      .fade-up:nth-child(5) {
+        transition-delay: 0.32s;
+      }
+      .fade-up:nth-child(6) {
+        transition-delay: 0.4s;
+      }
+
+      /* horizontal scroll marquee for tech stack */
+      .marquee-wrap {
+        overflow: hidden;
+        position: relative;
+      }
+      .marquee-wrap::before,
+      .marquee-wrap::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        z-index: 2;
+        width: 80px;
+      }
+      .marquee-wrap::before {
+        left: 0;
+        background: linear-gradient(to right, var(--bg-2), transparent);
+      }
+      .marquee-wrap::after {
+        right: 0;
+        background: linear-gradient(to left, var(--bg-2), transparent);
+      }
+      .marquee-track {
+        display: flex;
+        gap: 10px;
+        animation: scroll 28s linear infinite;
+        width: max-content;
+      }
+      .marquee-track:hover {
+        animation-play-state: paused;
+      }
+      @keyframes scroll {
+        0% {
+          transform: translateX(0);
+        }
+        100% {
+          transform: translateX(-50%);
+        }
+      }
+      .marquee-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 18px;
+        border-radius: var(--radius-sm);
+        border: 1px solid var(--border);
+        background: var(--bg-card);
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--text-2);
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+      .marquee-item span {
+        font-size: 16px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ─── NAV ─── -->
+    <nav id="nav">
+      <a href="#" class="nav-logo">
+        <div class="nav-logo-icon">🎯</div>
+        Flutter Template
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="#features">Features</a></li>
+        <li><a href="#architecture">Architecture</a></li>
+        <li><a href="#packages">Packages</a></li>
+        <li><a href="#quickstart">Quick Start</a></li>
+      </ul>
+
+      <div class="nav-cta">
+        <a
+          href="https://github.com/eng-kerolos-adel/"
+          class="nav-btn nav-btn-ghost"
+          target="_blank"
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"
+            />
+          </svg>
+          GitHub
+        </a>
+        <a
+          href="https://github.com/eng-kerolos-adel/flutter-riverpod-template"
+          class="nav-btn nav-btn-primary"
+          target="_blank"
+        >
+          Use Template →
+        </a>
       </div>
-      <div class="code-tabs">
-        <button class="code-tab active" onclick="switchTab(event,'auth')">auth_provider.dart</button>
-        <button class="code-tab" onclick="switchTab(event,'repo')">auth_repository.dart</button>
-        <button class="code-tab" onclick="switchTab(event,'router')">app_router.dart</button>
-        <button class="code-tab" onclick="switchTab(event,'failure')">failures.dart</button>
-      </div>
-      <div class="code-body">
 
-        <div class="code-panel active" id="tab-auth"><pre><span class="cm">// Riverpod 2.x — generator syntax, zero boilerplate</span>
+      <button class="nav-hamburger" onclick="toggleMenu()" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+
+    <!-- Mobile Drawer -->
+    <div class="nav-drawer" id="drawer">
+      <a href="#features" onclick="toggleMenu()">Features</a>
+      <a href="#architecture" onclick="toggleMenu()">Architecture</a>
+      <a href="#packages" onclick="toggleMenu()">Packages</a>
+      <a href="#quickstart" onclick="toggleMenu()">Quick Start</a>
+      <div
+        class="nav-drawer-cta"
+        style="display: flex; gap: 10px; margin-top: 8px"
+      >
+        <a
+          href="https://github.com/eng-kerolos-adel/flutter-riverpod-template"
+          class="nav-btn nav-btn-ghost"
+          style="flex: 1; justify-content: center"
+          target="_blank"
+          >GitHub</a
+        >
+        <a
+          href="https://github.com/eng-kerolos-adel/flutter-riverpod-template"
+          class="nav-btn nav-btn-primary"
+          style="flex: 1; justify-content: center"
+          target="_blank"
+          >Use Template</a
+        >
+      </div>
+    </div>
+
+    <!-- ─── HERO ─── -->
+    <section class="hero">
+      <div class="hero-bg"></div>
+
+      <div class="hero-eyebrow">
+        <div class="hero-eyebrow-dot"></div>
+        Open Source · Free Forever · MIT License
+      </div>
+
+      <h1 class="hero-title">
+        Ship <span class="word-flutter">Flutter</span> apps<br />
+        <span class="word-gradient">in days, not months</span>
+      </h1>
+
+      <p class="hero-sub">
+        A production-ready template with Riverpod 2.x, GoRouter, the full
+        Firebase suite, and feature-first clean architecture. Battle-tested
+        across real apps with real users.
+      </p>
+
+      <div class="hero-actions">
+        <a
+          href="https://github.com/eng-kerolos-adel/flutter-riverpod-template"
+          class="btn-primary"
+          target="_blank"
+        >
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"
+            />
+          </svg>
+          Use This Template
+        </a>
+        <a href="#features" class="btn-secondary"> Explore Features ↓ </a>
+      </div>
+
+      <div class="hero-stats">
+        <div class="stat-item">
+          <div class="stat-num"><span>48</span></div>
+          <div class="stat-label">Dart Files</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num"><span>30</span>+</div>
+          <div class="stat-label">Packages</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num"><span>8</span></div>
+          <div class="stat-label">Firebase Services</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num"><span>3</span></div>
+          <div class="stat-label">Clean Layers</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num"><span>6</span></div>
+          <div class="stat-label">Unit Tests</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── CODE PREVIEW ─── -->
+    <section class="section" id="code">
+      <div class="section-inner">
+        <span class="section-eyebrow">Code Preview</span>
+        <h2 class="section-title">Clean code.<br />Consistent patterns.</h2>
+        <p class="section-sub">
+          Every feature follows the same structure. You'll never have to guess
+          where something goes.
+        </p>
+
+        <div class="code-window">
+          <div class="code-titlebar">
+            <div class="dot dot-r"></div>
+            <div class="dot dot-y"></div>
+            <div class="dot dot-g"></div>
+            <span class="code-filename">flutter_riverpod_template / lib</span>
+          </div>
+          <div class="code-tabs">
+            <button class="code-tab active" onclick="switchTab(event, 'auth')">
+              auth_provider.dart
+            </button>
+            <button class="code-tab" onclick="switchTab(event, 'repo')">
+              auth_repository.dart
+            </button>
+            <button class="code-tab" onclick="switchTab(event, 'router')">
+              app_router.dart
+            </button>
+            <button class="code-tab" onclick="switchTab(event, 'failure')">
+              failures.dart
+            </button>
+          </div>
+          <div class="code-body">
+            <div class="code-panel active" id="tab-auth">
+              <pre><span class="cm">// Riverpod 2.x — generator syntax, zero boilerplate</span>
 <span class="nn">@riverpod</span>
 <span class="cl">Stream</span>&lt;<span class="cl">UserEntity</span>?&gt; <span class="fn">authState</span>(<span class="cl">AuthStateRef</span> ref) {
   <span class="kw">return</span> ref.<span class="fn">watch</span>(authRepositoryProvider).authStateChanges;
@@ -807,9 +1398,11 @@
     <span class="kw">await</span> _repository.<span class="fn">signOut</span>();
     state = <span class="kw">const</span> <span class="cl">AsyncData</span>(<span class="kw">null</span>);
   }
-}</pre></div>
+}</pre>
+            </div>
 
-        <div class="code-panel" id="tab-repo"><pre><span class="cm">// Domain layer — no Flutter, no Firebase, pure Dart</span>
+            <div class="code-panel" id="tab-repo">
+              <pre><span class="cm">// Domain layer — no Flutter, no Firebase, pure Dart</span>
 <span class="kw">abstract class</span> <span class="cl">AuthRepository</span> {
   <span class="cl">Stream</span>&lt;<span class="cl">UserEntity</span>?&gt; <span class="kw">get</span> authStateChanges;
 
@@ -834,9 +1427,11 @@
     <span class="st">'network-request-failed'</span> =&gt; <span class="kw">const</span> <span class="cl">NetworkFailure</span>(),
     _ =&gt; <span class="cl">AuthFailure</span>(message: e.message ?? <span class="st">'Auth failed'</span>),
   };
-}</pre></div>
+}</pre>
+            </div>
 
-        <div class="code-panel" id="tab-router"><pre><span class="cm">// GoRouter — reactive auth guard + indexed shell</span>
+            <div class="code-panel" id="tab-router">
+              <pre><span class="cm">// GoRouter — reactive auth guard + indexed shell</span>
 <span class="nn">@riverpod</span>
 <span class="cl">GoRouter</span> <span class="fn">appRouter</span>(<span class="cl">AppRouterRef</span> ref) {
   <span class="kw">final</span> authState = ref.<span class="fn">watch</span>(authStateProvider);
@@ -862,9 +1457,11 @@
       ),
     ],
   );
-}</pre></div>
+}</pre>
+            </div>
 
-        <div class="code-panel" id="tab-failure"><pre><span class="cm">// Typed failures — no String errors, ever</span>
+            <div class="code-panel" id="tab-failure">
+              <pre><span class="cm">// Typed failures — no String errors, ever</span>
 <span class="kw">abstract class</span> <span class="cl">Failure</span> <span class="kw">extends</span> <span class="cl">Equatable</span> {
   <span class="kw">const</span> <span class="fn">Failure</span>({ <span class="kw">required</span> <span class="kw">this</span>.message, <span class="kw">this</span>.code });
   <span class="kw">final</span> <span class="cl">String</span> message;
@@ -885,227 +1482,453 @@ result.<span class="fn">fold</span>(
   (f) <span class="kw">when</span> f <span class="kw">is</span> <span class="cl">UnauthorizedFailure</span> =&gt; context.<span class="fn">go</span>(<span class="cl">AppRoutes</span>.login),
   (f) =&gt; context.<span class="fn">showSnackBar</span>(f.message, isError: <span class="kw">true</span>),
   (user) =&gt; context.<span class="fn">go</span>(<span class="cl">AppRoutes</span>.home),
-);</pre></div>
-
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ─── FEATURES ─── -->
-<section class="section" id="features" style="background:var(--bg-2); border-top:1px solid var(--border); border-bottom:1px solid var(--border);">
-  <div class="section-inner">
-    <span class="section-eyebrow">Features</span>
-    <h2 class="section-title">Everything you need.<br>Nothing you don't.</h2>
-    <p class="section-sub">Every decision stress-tested in real production apps with real users and real consequences.</p>
-
-    <div class="features-grid">
-      <div class="feature-card fade-up">
-        <div class="feature-icon">⚡</div>
-        <div class="feature-title">Riverpod 2.x + Code Gen</div>
-        <p class="feature-desc">Generator-based providers with <code>@riverpod</code> annotations. <code>AsyncNotifier</code> for actions, <code>StreamProvider</code> for real-time. Zero boilerplate, compile-time safety.</p>
-      </div>
-      <div class="feature-card fade-up">
-        <div class="feature-icon">🧭</div>
-        <div class="feature-title">GoRouter with Auth Guards</div>
-        <p class="feature-desc">Declarative navigation with reactive redirect guards, type-safe routes via <code>AppRoutes</code>, deep linking, and <code>StatefulShellRoute</code> for bottom navigation.</p>
-      </div>
-      <div class="feature-card fade-up">
-        <div class="feature-icon">🔥</div>
-        <div class="feature-title">Full Firebase Suite</div>
-        <p class="feature-desc">Auth (email, Google, Apple), Firestore, Storage, Analytics, Crashlytics, Remote Config, and Push Notifications — 8 services pre-wired and working.</p>
-      </div>
-      <div class="feature-card fade-up">
-        <div class="feature-icon">🏗️</div>
-        <div class="feature-title">Feature-First Architecture</div>
-        <p class="feature-desc">Domain entities are pure Dart. Data models know Firebase. Presentation only touches providers. Strict layer contracts — impossible to violate by accident.</p>
-      </div>
-      <div class="feature-card fade-up">
-        <div class="feature-icon">🛡️</div>
-        <div class="feature-title">Typed Error Handling</div>
-        <p class="feature-desc"><code>Either&lt;Failure, T&gt;</code> from <code>dartz</code> on every repository call. 15 typed Failure classes. No raw exceptions leaking from Firebase into your UI.</p>
-      </div>
-      <div class="feature-card fade-up">
-        <div class="feature-icon">🌐</div>
-        <div class="feature-title">Dio + 4 Interceptors</div>
-        <p class="feature-desc">Auth injection, automatic 401 token refresh, exponential backoff retry, typed error mapping, and full request/response logging — all pre-configured.</p>
-      </div>
-      <div class="feature-card fade-up">
-        <div class="feature-icon">🎨</div>
-        <div class="feature-title">Material 3 Theme System</div>
-        <p class="feature-desc">Complete light/dark theme, Inter font, full color token system, every component styled consistently, and persistent theme preference via SharedPreferences.</p>
-      </div>
-      <div class="feature-card fade-up">
-        <div class="feature-icon">🧪</div>
-        <div class="feature-title">Tests Included</div>
-        <p class="feature-desc">6 test files covering use cases, entities, failures, and validators. Structure mirrors the feature folders. <code>mocktail</code> pre-configured for mocking repositories.</p>
-      </div>
-      <div class="feature-card fade-up">
-        <div class="feature-icon">🔧</div>
-        <div class="feature-title">Makefile + Linting</div>
-        <p class="feature-desc">One-command setup, codegen, formatting, coverage. <code>very_good_analysis</code> + <code>riverpod_lint</code> + <code>custom_lint</code> catch problems before they reach production.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ─── ARCHITECTURE ─── -->
-<section class="arch-section" id="architecture">
-  <div class="section-inner">
-    <span class="section-eyebrow">Architecture</span>
-    <h2 class="section-title">Clean. Feature-first.<br>Scales with your team.</h2>
-
-    <div class="arch-body">
-      <div>
-        <div class="arch-diagram">
-          <div class="arch-layer presentation">
-            <span class="arch-layer-label">Presentation</span>
-            <div class="arch-pills">
-              <span class="arch-pill">Pages</span>
-              <span class="arch-pill">Widgets</span>
-              <span class="arch-pill">Riverpod</span>
-              <span class="arch-pill">GoRouter</span>
-            </div>
-          </div>
-          <div style="text-align:center;padding:10px 0;font-size:11px;color:var(--text-3);letter-spacing:.06em;">↕ depends on domain only</div>
-          <div class="arch-layer domain mid">
-            <span class="arch-layer-label">Domain</span>
-            <div class="arch-pills">
-              <span class="arch-pill">Entities</span>
-              <span class="arch-pill">Repositories</span>
-              <span class="arch-pill">Use Cases</span>
-              <span class="arch-pill">Failures</span>
-            </div>
-          </div>
-          <div style="text-align:center;padding:10px 0;font-size:11px;color:var(--text-3);letter-spacing:.06em;">↕ implements domain</div>
-          <div class="arch-layer data mid">
-            <span class="arch-layer-label">Data</span>
-            <div class="arch-pills">
-              <span class="arch-pill">Freezed Models</span>
-              <span class="arch-pill">Firebase</span>
-              <span class="arch-pill">Dio / REST</span>
-              <span class="arch-pill">Hive</span>
+);</pre>
             </div>
           </div>
         </div>
       </div>
+    </section>
 
-      <div class="arch-rules">
-        <div class="arch-rule">
-          <div class="arch-rule-num">01</div>
-          <div class="arch-rule-text">
-            <h4>Data flows inward only</h4>
-            <p>Presentation never imports from data. Data never imports from presentation. Domain has zero external dependencies — pure Dart classes, always.</p>
+    <!-- ─── FEATURES ─── -->
+    <section
+      class="section"
+      id="features"
+      style="
+        background: var(--bg-2);
+        border-top: 1px solid var(--border);
+        border-bottom: 1px solid var(--border);
+      "
+    >
+      <div class="section-inner">
+        <span class="section-eyebrow">Features</span>
+        <h2 class="section-title">
+          Everything you need.<br />Nothing you don't.
+        </h2>
+        <p class="section-sub">
+          Every decision stress-tested in real production apps with real users
+          and real consequences.
+        </p>
+
+        <div class="features-grid">
+          <div class="feature-card fade-up">
+            <div class="feature-icon">⚡</div>
+            <div class="feature-title">Riverpod 2.x + Code Gen</div>
+            <p class="feature-desc">
+              Generator-based providers with <code>@riverpod</code> annotations.
+              <code>AsyncNotifier</code> for actions,
+              <code>StreamProvider</code> for real-time. Zero boilerplate,
+              compile-time safety.
+            </p>
           </div>
-        </div>
-        <div class="arch-rule">
-          <div class="arch-rule-num">02</div>
-          <div class="arch-rule-text">
-            <h4>One use case per operation</h4>
-            <p>Each use case does exactly one thing. <code>SignInWithEmailUseCase</code>, <code>GetPostsUseCase</code>, <code>ToggleLikeUseCase</code>. Small, focused, easy to test in isolation.</p>
+          <div class="feature-card fade-up">
+            <div class="feature-icon">🧭</div>
+            <div class="feature-title">GoRouter with Auth Guards</div>
+            <p class="feature-desc">
+              Declarative navigation with reactive redirect guards, type-safe
+              routes via <code>AppRoutes</code>, deep linking, and
+              <code>StatefulShellRoute</code> for bottom navigation.
+            </p>
           </div>
-        </div>
-        <div class="arch-rule">
-          <div class="arch-rule-num">03</div>
-          <div class="arch-rule-text">
-            <h4>Repositories as contracts</h4>
-            <p>The domain defines <em>what</em> the repository must do. The data layer defines <em>how</em>. Swap Firebase for Supabase without touching a single use case.</p>
+          <div class="feature-card fade-up">
+            <div class="feature-icon">🔥</div>
+            <div class="feature-title">Full Firebase Suite</div>
+            <p class="feature-desc">
+              Auth (email, Google, Apple), Firestore, Storage, Analytics,
+              Crashlytics, Remote Config, and Push Notifications — 8 services
+              pre-wired and working.
+            </p>
           </div>
-        </div>
-        <div class="arch-rule">
-          <div class="arch-rule-num">04</div>
-          <div class="arch-rule-text">
-            <h4>New feature = same folder pattern</h4>
-            <p>Every developer on your team adds features the same way. The structure enforces consistency. No debates about where something lives.</p>
+          <div class="feature-card fade-up">
+            <div class="feature-icon">🏗️</div>
+            <div class="feature-title">Feature-First Architecture</div>
+            <p class="feature-desc">
+              Domain entities are pure Dart. Data models know Firebase.
+              Presentation only touches providers. Strict layer contracts —
+              impossible to violate by accident.
+            </p>
+          </div>
+          <div class="feature-card fade-up">
+            <div class="feature-icon">🛡️</div>
+            <div class="feature-title">Typed Error Handling</div>
+            <p class="feature-desc">
+              <code>Either&lt;Failure, T&gt;</code> from <code>dartz</code> on
+              every repository call. 15 typed Failure classes. No raw exceptions
+              leaking from Firebase into your UI.
+            </p>
+          </div>
+          <div class="feature-card fade-up">
+            <div class="feature-icon">🌐</div>
+            <div class="feature-title">Dio + 4 Interceptors</div>
+            <p class="feature-desc">
+              Auth injection, automatic 401 token refresh, exponential backoff
+              retry, typed error mapping, and full request/response logging —
+              all pre-configured.
+            </p>
+          </div>
+          <div class="feature-card fade-up">
+            <div class="feature-icon">🎨</div>
+            <div class="feature-title">Material 3 Theme System</div>
+            <p class="feature-desc">
+              Complete light/dark theme, Inter font, full color token system,
+              every component styled consistently, and persistent theme
+              preference via SharedPreferences.
+            </p>
+          </div>
+          <div class="feature-card fade-up">
+            <div class="feature-icon">🧪</div>
+            <div class="feature-title">Tests Included</div>
+            <p class="feature-desc">
+              6 test files covering use cases, entities, failures, and
+              validators. Structure mirrors the feature folders.
+              <code>mocktail</code> pre-configured for mocking repositories.
+            </p>
+          </div>
+          <div class="feature-card fade-up">
+            <div class="feature-icon">🔧</div>
+            <div class="feature-title">Makefile + Linting</div>
+            <p class="feature-desc">
+              One-command setup, codegen, formatting, coverage.
+              <code>very_good_analysis</code> + <code>riverpod_lint</code> +
+              <code>custom_lint</code> catch problems before they reach
+              production.
+            </p>
           </div>
         </div>
       </div>
-    </div>
-  </div>
-</section>
+    </section>
 
-<!-- ─── PACKAGES MARQUEE ─── -->
-<section class="section" id="packages" style="background:var(--bg-2); border-top:1px solid var(--border); border-bottom:1px solid var(--border);">
-  <div class="section-inner">
-    <span class="section-eyebrow">Tech Stack</span>
-    <h2 class="section-title">30+ production packages.<br>All configured correctly.</h2>
-    <p class="section-sub">No more hours wiring packages together. Everything is integrated and working from day one.</p>
+    <!-- ─── ARCHITECTURE ─── -->
+    <section class="arch-section" id="architecture">
+      <div class="section-inner">
+        <span class="section-eyebrow">Architecture</span>
+        <h2 class="section-title">
+          Clean. Feature-first.<br />Scales with your team.
+        </h2>
 
-    <div class="marquee-wrap" style="margin-bottom:14px;">
-      <div class="marquee-track" id="track1"></div>
-    </div>
-    <div class="marquee-wrap">
-      <div class="marquee-track" id="track2" style="animation-direction:reverse;animation-duration:22s;"></div>
-    </div>
-
-    <div class="packages-grid" style="margin-top:48px;">
-      <div class="pkg-card"><div class="pkg-icon">🎯</div><div><div class="pkg-name">flutter_riverpod</div><div class="pkg-ver">^2.5.1</div></div></div>
-      <div class="pkg-card"><div class="pkg-icon">🏭</div><div><div class="pkg-name">riverpod_generator</div><div class="pkg-ver">^2.4.0</div></div></div>
-      <div class="pkg-card"><div class="pkg-icon">🧭</div><div><div class="pkg-name">go_router</div><div class="pkg-ver">^14.0.1</div></div></div>
-      <div class="pkg-card"><div class="pkg-icon">🔐</div><div><div class="pkg-name">firebase_auth</div><div class="pkg-ver">^5.1.1</div></div></div>
-      <div class="pkg-card"><div class="pkg-icon">🗄️</div><div><div class="pkg-name">cloud_firestore</div><div class="pkg-ver">^5.0.2</div></div></div>
-      <div class="pkg-card"><div class="pkg-icon">📦</div><div><div class="pkg-name">freezed</div><div class="pkg-ver">^2.5.2</div></div></div>
-      <div class="pkg-card"><div class="pkg-icon">🌐</div><div><div class="pkg-name">dio</div><div class="pkg-ver">^5.4.3</div></div></div>
-      <div class="pkg-card"><div class="pkg-icon">↔️</div><div><div class="pkg-name">dartz</div><div class="pkg-ver">^0.10.1</div></div></div>
-      <div class="pkg-card"><div class="pkg-icon">💾</div><div><div class="pkg-name">hive_flutter</div><div class="pkg-ver">^1.1.0</div></div></div>
-      <div class="pkg-card"><div class="pkg-icon">🔒</div><div><div class="pkg-name">flutter_secure_storage</div><div class="pkg-ver">^9.2.2</div></div></div>
-      <div class="pkg-card"><div class="pkg-icon">📊</div><div><div class="pkg-name">firebase_analytics</div><div class="pkg-ver">^11.1.0</div></div></div>
-      <div class="pkg-card"><div class="pkg-icon">💥</div><div><div class="pkg-name">firebase_crashlytics</div><div class="pkg-ver">^4.0.4</div></div></div>
-      <div class="pkg-card"><div class="pkg-icon">🔔</div><div><div class="pkg-name">firebase_messaging</div><div class="pkg-ver">^15.0.4</div></div></div>
-      <div class="pkg-card"><div class="pkg-icon">✨</div><div><div class="pkg-name">flutter_animate</div><div class="pkg-ver">^4.5.0</div></div></div>
-      <div class="pkg-card"><div class="pkg-icon">🖼️</div><div><div class="pkg-name">cached_network_image</div><div class="pkg-ver">^3.3.1</div></div></div>
-      <div class="pkg-card"><div class="pkg-icon">👻</div><div><div class="pkg-name">shimmer</div><div class="pkg-ver">^3.0.0</div></div></div>
-    </div>
-  </div>
-</section>
-
-<!-- ─── QUICK START ─── -->
-<section class="section" id="quickstart">
-  <div class="section-inner">
-    <span class="section-eyebrow">Quick Start</span>
-    <h2 class="section-title">Zero to running<br>in under 5 minutes.</h2>
-
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start;">
-
-      <div class="steps">
-        <div class="step">
-          <div class="step-num">1</div>
-          <div class="step-body">
-            <h4>Clone the template</h4>
-            <p>Hit "Use This Template" on GitHub, name your repo, and clone it locally. Or <code>git clone</code> directly.</p>
+        <div class="arch-body">
+          <div>
+            <div class="arch-diagram">
+              <div class="arch-layer presentation">
+                <span class="arch-layer-label">Presentation</span>
+                <div class="arch-pills">
+                  <span class="arch-pill">Pages</span>
+                  <span class="arch-pill">Widgets</span>
+                  <span class="arch-pill">Riverpod</span>
+                  <span class="arch-pill">GoRouter</span>
+                </div>
+              </div>
+              <div
+                style="
+                  text-align: center;
+                  padding: 10px 0;
+                  font-size: 11px;
+                  color: var(--text-3);
+                  letter-spacing: 0.06em;
+                "
+              >
+                ↕ depends on domain only
+              </div>
+              <div class="arch-layer domain mid">
+                <span class="arch-layer-label">Domain</span>
+                <div class="arch-pills">
+                  <span class="arch-pill">Entities</span>
+                  <span class="arch-pill">Repositories</span>
+                  <span class="arch-pill">Use Cases</span>
+                  <span class="arch-pill">Failures</span>
+                </div>
+              </div>
+              <div
+                style="
+                  text-align: center;
+                  padding: 10px 0;
+                  font-size: 11px;
+                  color: var(--text-3);
+                  letter-spacing: 0.06em;
+                "
+              >
+                ↕ implements domain
+              </div>
+              <div class="arch-layer data mid">
+                <span class="arch-layer-label">Data</span>
+                <div class="arch-pills">
+                  <span class="arch-pill">Freezed Models</span>
+                  <span class="arch-pill">Firebase</span>
+                  <span class="arch-pill">Dio / REST</span>
+                  <span class="arch-pill">Hive</span>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
-        <div class="step">
-          <div class="step-num">2</div>
-          <div class="step-body">
-            <h4>Install + generate code</h4>
-            <p>Run <code>make setup</code> — this runs <code>flutter pub get</code> and <code>build_runner</code> in one shot. All generated files will appear.</p>
-          </div>
-        </div>
-        <div class="step">
-          <div class="step-num">3</div>
-          <div class="step-body">
-            <h4>Configure Firebase</h4>
-            <p>Run <code>flutterfire configure</code> with the FlutterFire CLI. It auto-generates <code>firebase_options.dart</code> with your project's real keys.</p>
-          </div>
-        </div>
-        <div class="step">
-          <div class="step-num">4</div>
-          <div class="step-body">
-            <h4>Set your environment</h4>
-            <p>Copy <code>.env.example.json</code> → <code>.env.json</code>, set your <code>BASE_URL</code>, then run with <code>make run</code>. Done.</p>
+
+          <div class="arch-rules">
+            <div class="arch-rule">
+              <div class="arch-rule-num">01</div>
+              <div class="arch-rule-text">
+                <h4>Data flows inward only</h4>
+                <p>
+                  Presentation never imports from data. Data never imports from
+                  presentation. Domain has zero external dependencies — pure
+                  Dart classes, always.
+                </p>
+              </div>
+            </div>
+            <div class="arch-rule">
+              <div class="arch-rule-num">02</div>
+              <div class="arch-rule-text">
+                <h4>One use case per operation</h4>
+                <p>
+                  Each use case does exactly one thing.
+                  <code>SignInWithEmailUseCase</code>,
+                  <code>GetPostsUseCase</code>, <code>ToggleLikeUseCase</code>.
+                  Small, focused, easy to test in isolation.
+                </p>
+              </div>
+            </div>
+            <div class="arch-rule">
+              <div class="arch-rule-num">03</div>
+              <div class="arch-rule-text">
+                <h4>Repositories as contracts</h4>
+                <p>
+                  The domain defines <em>what</em> the repository must do. The
+                  data layer defines <em>how</em>. Swap Firebase for Supabase
+                  without touching a single use case.
+                </p>
+              </div>
+            </div>
+            <div class="arch-rule">
+              <div class="arch-rule-num">04</div>
+              <div class="arch-rule-text">
+                <h4>New feature = same folder pattern</h4>
+                <p>
+                  Every developer on your team adds features the same way. The
+                  structure enforces consistency. No debates about where
+                  something lives.
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
+    </section>
 
-      <div class="terminal">
-        <div class="terminal-bar">
-          <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
-          <span class="terminal-title">bash</span>
+    <!-- ─── PACKAGES MARQUEE ─── -->
+    <section
+      class="section"
+      id="packages"
+      style="
+        background: var(--bg-2);
+        border-top: 1px solid var(--border);
+        border-bottom: 1px solid var(--border);
+      "
+    >
+      <div class="section-inner">
+        <span class="section-eyebrow">Tech Stack</span>
+        <h2 class="section-title">
+          30+ production packages.<br />All configured correctly.
+        </h2>
+        <p class="section-sub">
+          No more hours wiring packages together. Everything is integrated and
+          working from day one.
+        </p>
+
+        <div class="marquee-wrap" style="margin-bottom: 14px">
+          <div class="marquee-track" id="track1"></div>
         </div>
-        <div class="terminal-body">
-          <pre><span class="t-cmt"># 1. Clone</span>
-<span class="t-prompt">$</span> <span class="t-cmd">git clone</span> <span class="t-arg">github.com/kerolosadel/flutter-riverpod-template</span> my_app
+        <div class="marquee-wrap">
+          <div
+            class="marquee-track"
+            id="track2"
+            style="animation-direction: reverse; animation-duration: 22s"
+          ></div>
+        </div>
+
+        <div class="packages-grid" style="margin-top: 48px">
+          <div class="pkg-card">
+            <div class="pkg-icon">🎯</div>
+            <div>
+              <div class="pkg-name">flutter_riverpod</div>
+              <div class="pkg-ver">^2.5.1</div>
+            </div>
+          </div>
+          <div class="pkg-card">
+            <div class="pkg-icon">🏭</div>
+            <div>
+              <div class="pkg-name">riverpod_generator</div>
+              <div class="pkg-ver">^2.4.0</div>
+            </div>
+          </div>
+          <div class="pkg-card">
+            <div class="pkg-icon">🧭</div>
+            <div>
+              <div class="pkg-name">go_router</div>
+              <div class="pkg-ver">^14.0.1</div>
+            </div>
+          </div>
+          <div class="pkg-card">
+            <div class="pkg-icon">🔐</div>
+            <div>
+              <div class="pkg-name">firebase_auth</div>
+              <div class="pkg-ver">^5.1.1</div>
+            </div>
+          </div>
+          <div class="pkg-card">
+            <div class="pkg-icon">🗄️</div>
+            <div>
+              <div class="pkg-name">cloud_firestore</div>
+              <div class="pkg-ver">^5.0.2</div>
+            </div>
+          </div>
+          <div class="pkg-card">
+            <div class="pkg-icon">📦</div>
+            <div>
+              <div class="pkg-name">freezed</div>
+              <div class="pkg-ver">^2.5.2</div>
+            </div>
+          </div>
+          <div class="pkg-card">
+            <div class="pkg-icon">🌐</div>
+            <div>
+              <div class="pkg-name">dio</div>
+              <div class="pkg-ver">^5.4.3</div>
+            </div>
+          </div>
+          <div class="pkg-card">
+            <div class="pkg-icon">↔️</div>
+            <div>
+              <div class="pkg-name">dartz</div>
+              <div class="pkg-ver">^0.10.1</div>
+            </div>
+          </div>
+          <div class="pkg-card">
+            <div class="pkg-icon">💾</div>
+            <div>
+              <div class="pkg-name">hive_flutter</div>
+              <div class="pkg-ver">^1.1.0</div>
+            </div>
+          </div>
+          <div class="pkg-card">
+            <div class="pkg-icon">🔒</div>
+            <div>
+              <div class="pkg-name">flutter_secure_storage</div>
+              <div class="pkg-ver">^9.2.2</div>
+            </div>
+          </div>
+          <div class="pkg-card">
+            <div class="pkg-icon">📊</div>
+            <div>
+              <div class="pkg-name">firebase_analytics</div>
+              <div class="pkg-ver">^11.1.0</div>
+            </div>
+          </div>
+          <div class="pkg-card">
+            <div class="pkg-icon">💥</div>
+            <div>
+              <div class="pkg-name">firebase_crashlytics</div>
+              <div class="pkg-ver">^4.0.4</div>
+            </div>
+          </div>
+          <div class="pkg-card">
+            <div class="pkg-icon">🔔</div>
+            <div>
+              <div class="pkg-name">firebase_messaging</div>
+              <div class="pkg-ver">^15.0.4</div>
+            </div>
+          </div>
+          <div class="pkg-card">
+            <div class="pkg-icon">✨</div>
+            <div>
+              <div class="pkg-name">flutter_animate</div>
+              <div class="pkg-ver">^4.5.0</div>
+            </div>
+          </div>
+          <div class="pkg-card">
+            <div class="pkg-icon">🖼️</div>
+            <div>
+              <div class="pkg-name">cached_network_image</div>
+              <div class="pkg-ver">^3.3.1</div>
+            </div>
+          </div>
+          <div class="pkg-card">
+            <div class="pkg-icon">👻</div>
+            <div>
+              <div class="pkg-name">shimmer</div>
+              <div class="pkg-ver">^3.0.0</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── QUICK START ─── -->
+    <section class="section" id="quickstart">
+      <div class="section-inner">
+        <span class="section-eyebrow">Quick Start</span>
+        <h2 class="section-title">Zero to running<br />in under 5 minutes.</h2>
+
+        <div
+          style="
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 48px;
+            align-items: start;
+          "
+        >
+          <div class="steps">
+            <div class="step">
+              <div class="step-num">1</div>
+              <div class="step-body">
+                <h4>Clone the template</h4>
+                <p>
+                  Hit "Use This Template" on GitHub, name your repo, and clone
+                  it locally. Or <code>git clone</code> directly.
+                </p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num">2</div>
+              <div class="step-body">
+                <h4>Install + generate code</h4>
+                <p>
+                  Run <code>make setup</code> — this runs
+                  <code>flutter pub get</code> and <code>build_runner</code> in
+                  one shot. All generated files will appear.
+                </p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num">3</div>
+              <div class="step-body">
+                <h4>Configure Firebase</h4>
+                <p>
+                  Run <code>flutterfire configure</code> with the FlutterFire
+                  CLI. It auto-generates <code>firebase_options.dart</code> with
+                  your project's real keys.
+                </p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num">4</div>
+              <div class="step-body">
+                <h4>Set your environment</h4>
+                <p>
+                  Copy <code>.env.example.json</code> → <code>.env.json</code>,
+                  set your <code>BASE_URL</code>, then run with
+                  <code>make run</code>. Done.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="terminal">
+            <div class="terminal-bar">
+              <div class="dot dot-r"></div>
+              <div class="dot dot-y"></div>
+              <div class="dot dot-g"></div>
+              <span class="terminal-title">bash</span>
+            </div>
+            <div class="terminal-body">
+              <pre><span class="t-cmt"># 1. Clone</span>
+<span class="t-prompt">$</span> <span class="t-cmd">git clone</span> <span class="t-arg">github.com/eng-kerolos-adel/flutter-riverpod-template</span> my_app
 <span class="t-prompt">$</span> <span class="t-cmd">cd</span> my_app
 
 <span class="t-cmt"># 2. Install + codegen</span>
@@ -1124,92 +1947,167 @@ result.<span class="fn">fold</span>(
 <span class="t-prompt">$</span> <span class="t-cmd">make</span> <span class="t-arg">run</span>
 <span class="t-out">✓ Launching on Chrome...</span>
 <span class="t-out">✓ Running on Android...</span></pre>
+            </div>
+          </div>
         </div>
       </div>
+    </section>
 
-    </div>
-  </div>
-</section>
+    <!-- ─── CTA ─── -->
+    <section class="cta-section">
+      <div class="cta-bg"></div>
+      <h2>
+        Ready to<br /><span
+          style="
+            background: linear-gradient(
+              90deg,
+              var(--blue-bright),
+              var(--blue),
+              var(--green)
+            );
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+          "
+          >start shipping?</span
+        >
+      </h2>
+      <p>Free. Open source. MIT License. No strings attached.</p>
+      <div
+        style="
+          display: flex;
+          gap: 12px;
+          justify-content: center;
+          flex-wrap: wrap;
+        "
+      >
+        <a
+          href="https://github.com/eng-kerolos-adel/flutter-riverpod-template"
+          class="btn-primary"
+          target="_blank"
+        >
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"
+            />
+          </svg>
+          Get the Template
+        </a>
+        <a
+          href="https://github.com/eng-kerolos-adel/flutter-riverpod-template/blob/main/README.md"
+          class="btn-secondary"
+          target="_blank"
+        >
+          Read the Docs →
+        </a>
+      </div>
+    </section>
 
-<!-- ─── CTA ─── -->
-<section class="cta-section">
-  <div class="cta-bg"></div>
-  <h2>Ready to<br><span style="background:linear-gradient(90deg,var(--blue-bright),var(--blue),var(--green));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">start shipping?</span></h2>
-  <p>Free. Open source. MIT License. No strings attached.</p>
-  <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
-    <a href="https://github.com/kerolosadel/flutter-riverpod-template" class="btn-primary" target="_blank">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
-      Get the Template
-    </a>
-    <a href="https://github.com/kerolosadel/flutter-riverpod-template/blob/main/README.md" class="btn-secondary" target="_blank">
-      Read the Docs →
-    </a>
-  </div>
-</section>
+    <!-- ─── FOOTER ─── -->
+    <footer>
+      <div class="footer-left">
+        Built by
+        <a href="https://kerolos-adel.vercel.app" target="_blank"
+          >Kerolos Adel</a
+        >
+        &nbsp;·&nbsp; MIT License &nbsp;·&nbsp;
+        <a
+          href="https://github.com/eng-kerolos-adel/flutter-riverpod-template"
+          target="_blank"
+          >GitHub</a
+        >
+      </div>
+      <div class="footer-right">
+        <span class="footer-badge">Flutter 3.22+</span>
+        <span class="footer-badge">Dart 3.3+</span>
+        <span class="footer-badge">Riverpod 2.x</span>
+      </div>
+    </footer>
 
-<!-- ─── FOOTER ─── -->
-<footer>
-  <div class="footer-left">
-    Built by <a href="https://kerolos-adel.vercel.app" target="_blank">Kerolos Adel</a> &nbsp;·&nbsp; MIT License &nbsp;·&nbsp;
-    <a href="https://github.com/kerolosadel/flutter-riverpod-template" target="_blank">GitHub</a>
-  </div>
-  <div class="footer-right">
-    <span class="footer-badge">Flutter 3.22+</span>
-    <span class="footer-badge">Dart 3.3+</span>
-    <span class="footer-badge">Riverpod 2.x</span>
-  </div>
-</footer>
+    <script>
+      /* ── Tab switcher ── */
+      function switchTab(e, tab) {
+        document
+          .querySelectorAll(".code-tab")
+          .forEach((t) => t.classList.remove("active"));
+        document
+          .querySelectorAll(".code-panel")
+          .forEach((p) => p.classList.remove("active"));
+        e.target.classList.add("active");
+        document.getElementById("tab-" + tab).classList.add("active");
+      }
 
-<script>
-  /* ── Tab switcher ── */
-  function switchTab(e, tab) {
-    document.querySelectorAll('.code-tab').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.code-panel').forEach(p => p.classList.remove('active'));
-    e.target.classList.add('active');
-    document.getElementById('tab-' + tab).classList.add('active');
-  }
+      /* ── Mobile menu ── */
+      function toggleMenu() {
+        document.getElementById("drawer").classList.toggle("open");
+      }
 
-  /* ── Mobile menu ── */
-  function toggleMenu() {
-    document.getElementById('drawer').classList.toggle('open');
-  }
+      /* ── Scroll animations ── */
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) e.target.classList.add("visible");
+          });
+        },
+        { threshold: 0.1 },
+      );
+      document
+        .querySelectorAll(".fade-up")
+        .forEach((el) => observer.observe(el));
 
-  /* ── Scroll animations ── */
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-  }, { threshold: 0.1 });
-  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+      /* ── Marquee content ── */
+      const pkgs1 = [
+        ["🎯", "flutter_riverpod"],
+        ["🧭", "go_router"],
+        ["🔥", "firebase_core"],
+        ["🔐", "firebase_auth"],
+        ["🗄️", "cloud_firestore"],
+        ["📦", "freezed"],
+        ["🌐", "dio"],
+        ["↔️", "dartz"],
+        ["💾", "hive_flutter"],
+        ["🔒", "flutter_secure_storage"],
+        ["✨", "flutter_animate"],
+        ["👻", "shimmer"],
+        ["🖼️", "cached_network_image"],
+        ["📊", "firebase_analytics"],
+        ["💥", "firebase_crashlytics"],
+      ];
+      const pkgs2 = [
+        ["🔔", "firebase_messaging"],
+        ["⚙️", "riverpod_annotation"],
+        ["🏭", "riverpod_generator"],
+        ["📝", "json_serializable"],
+        ["🔧", "build_runner"],
+        ["📌", "equatable"],
+        ["🧪", "mocktail"],
+        ["📍", "uuid"],
+        ["🔗", "retrofit"],
+        ["📡", "connectivity_plus"],
+        ["🔑", "package_info_plus"],
+        ["🖊️", "logger"],
+        ["🗺️", "go_router"],
+        ["🔨", "very_good_analysis"],
+      ];
 
-  /* ── Marquee content ── */
-  const pkgs1 = [
-    ['🎯','flutter_riverpod'],['🧭','go_router'],['🔥','firebase_core'],
-    ['🔐','firebase_auth'],['🗄️','cloud_firestore'],['📦','freezed'],
-    ['🌐','dio'],['↔️','dartz'],['💾','hive_flutter'],['🔒','flutter_secure_storage'],
-    ['✨','flutter_animate'],['👻','shimmer'],['🖼️','cached_network_image'],
-    ['📊','firebase_analytics'],['💥','firebase_crashlytics'],
-  ];
-  const pkgs2 = [
-    ['🔔','firebase_messaging'],['⚙️','riverpod_annotation'],['🏭','riverpod_generator'],
-    ['📝','json_serializable'],['🔧','build_runner'],['📌','equatable'],
-    ['🧪','mocktail'],['📍','uuid'],['🔗','retrofit'],['📡','connectivity_plus'],
-    ['🔑','package_info_plus'],['🖊️','logger'],['🗺️','go_router'],['🔨','very_good_analysis'],
-  ];
+      function buildMarquee(trackId, items) {
+        const track = document.getElementById(trackId);
+        const double = [...items, ...items];
+        track.innerHTML = double
+          .map(
+            ([icon, name]) =>
+              `<div class="marquee-item"><span>${icon}</span>${name}</div>`,
+          )
+          .join("");
+      }
+      buildMarquee("track1", pkgs1);
+      buildMarquee("track2", pkgs2);
 
-  function buildMarquee(trackId, items) {
-    const track = document.getElementById(trackId);
-    const double = [...items, ...items];
-    track.innerHTML = double.map(([icon, name]) =>
-      `<div class="marquee-item"><span>${icon}</span>${name}</div>`
-    ).join('');
-  }
-  buildMarquee('track1', pkgs1);
-  buildMarquee('track2', pkgs2);
-
-  /* ── Nav scroll effect ── */
-  window.addEventListener('scroll', () => {
-    document.getElementById('nav').style.background =
-      window.scrollY > 40 ? 'rgba(12,14,20,0.97)' : 'rgba(12,14,20,0.85)';
-  });
-</script>
-</body>
+      /* ── Nav scroll effect ── */
+      window.addEventListener("scroll", () => {
+        document.getElementById("nav").style.background =
+          window.scrollY > 40 ? "rgba(12,14,20,0.97)" : "rgba(12,14,20,0.85)";
+      });
+    </script>
+  </body>
 </html>
